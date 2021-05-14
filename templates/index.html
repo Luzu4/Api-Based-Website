@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}" rel="'stylesheet">
+
+    <title>Compare Products</title>
+</head>
+<body>
+<a href="{{url_for('home')}}">
+<img src="/static/images/title.png" href="{{url_for('home')}}" class="img-fluid w-100 img-responsive">
+</a>
+</div>
+<div class="container-fluid mt-3 text-center">
+    <form action="{{url_for('compare_products')}}" method="post">
+    <div class="row">
+        <div class="col-sm-5">
+                    <input name="product_1_barcode" class="form-control" type="number" placeholder="Barcode Product 1">
+        </div>
+                    <div class="col-sm-2">
+         <button type="submit" class="btn btn-lg btn-primary">Compare</button>
+
+            </div>
+        <div class="col-sm-5">
+        <input name="product_2_barcode" class="form-control" type="number" placeholder="Barcode Product 2">
+        </div>
+
+        </div>
+    </form>
+</div>
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col-sm-5">
+            {% if product_1 and 'product' in product_1 %}
+            <div> {{product_1['product']['product_name']}}</div>
+            <img src={{product_1['product']['image_url']}} width="300" height="300">
+            <div>Sugar : {{product_1['product']['nutriments']['sugars']}}</div>
+            {% endif %}
+        </div>
+        <div class="col-sm-2 ">
+             <div class="text-center">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                            <ul>
+                                {% for category, message in messages %}
+                                <div class="{{category}}">{{message}}</div>
+                                {% endfor %}
+                            </ul>
+                            {%endif%}
+                            {%endwith%}
+                            {% if product_1 and 'product' not in product_1 %}
+                                    <div class="error">Product 1 - Incorrect Barcode</div>
+                                {% endif %}
+                     {% if product_2 and 'product' not in product_2 %}
+                 <div>Product 2 - Incorrect Barcode</div>
+                                    {% endif %}
+                 <div>
+            {% if product_1 and product_2 and 'product' in product_2 and 'product' in product_1 and 'sugars' in product_2['product']['nutriments'] and 'sugars' in product_1['product']['nutriments'] %}
+                     {% if product_2['product']['nutriments']['sugars'] == product_1['product']['nutriments']['sugars'] %}
+                 <img src="/static/images/equal.png" class="img-fluid">
+                     {% endif %}
+                     {% if product_2['product']['nutriments']['sugars'] > product_1['product']['nutriments']['sugars'] %}
+                 <img src="/static/images/right.png" class="img-fluid">
+                     {% endif %}
+                     {% if product_2['product']['nutriments']['sugars'] < product_1['product']['nutriments']['sugars'] %}
+                 <img src="/static/images/left.png" class="img-fluid">
+                     {% endif %}
+           {% endif %}
+                 </div>
+             </div>
+
+        </div>
+        <div class="col-sm-5">
+            {% if product_2 and 'product' in product_2%}
+            <div> {{product_2['product']['product_name']}}</div>
+            <img src={{product_2['product']['image_url']}} width="300" height="300">
+            <div>Sugar : {{product_2['product']['nutriments']['sugars']}}</div>
+            {% endif %}
+        </div>
+        <div class="col-sm">
+
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>
